@@ -25,20 +25,63 @@ add_library( # Sets the name of the library.
 # you want to add. CMake verifies that the library exists before
 # completing its build.
 
-find_library( # Sets the name of the path variable.
-        log-lib
 
-        # Specifies the name of the NDK library that
-        # you want CMake to locate.
-        log)
+set(ANDROID_NDK_REVISION 16)
 
-# Specifies libraries CMake should link to your target library. You
-# can link multiple libraries, such as libraries you define in this
-# build script, prebuilt third-party libraries, or system libraries.
+set(CMAKE_VERBOSE_MAKEFILE on)
 
-target_link_libraries( # Specifies the target library.
-        native-lib
+set(ANDROID_STL "gnustl_shared")
 
-        # Links the target library to the log library
-        # included in the NDK.
-        ${log-lib})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -fexceptions -frtti")
+
+set(libs "../jniLibs")
+message(libs)
+
+include_directories(src/main/cpp/include/)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/android)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/atlastext)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/c)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/codec)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/config)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/core)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/effects)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/encode)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/gpu)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/pathops)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/ports)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/private)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/svg)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/utils)
+
+include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/include/views)
+
+add_library(libskia_eastedu SHARED IMPORTED )
+
+set_target_properties(libskia_eastedu PROPERTIES
+
+    IMPORTED_LOCATION "${libs}/${ANDROID_ABI}/libskia.so")
+
+add_library(eskia
+            SHARED
+            eskia.cpp )
+
+#find_library( android-lib android)
+
+target_link_libraries(eskia
+        libskia_eastedu
+        ${android-lib}
+    )
